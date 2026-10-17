@@ -6,3 +6,6 @@
   <div class="hero-media-grid">{% if slide and slide.media_url %}<div class="hero-current-media">{% if slide.media_type == 'image' %}<img src="{{ slide.media_url }}" alt="Current slide media">{% elif slide.media_type == 'video' %}<video src="{{ slide.media_url }}" controls playsinline></video>{% endif %}<span>Current media</span></div>{% endif %}<div class="field"><label for="id_media_upload">Upload from your device</label>{{ form.media_upload }}<small class="muted">Select an image or short video. This replaces the current URL when saved.</small>{% for error in form.media_upload.errors %}<small class="form-error">{{ error }}</small>{% endfor %}</div><div class="field"><label for="id_media_url">Or paste a media URL</label>{{ form.media_url }}<small class="muted">Use a direct, publicly reachable image or video URL.</small>{% for error in form.media_url.errors %}<small class="form-error">{{ error }}</small>{% endfor %}</div></div>
   <div class="form-actions"><button class="btn btn-primary" type="submit">Save slide</button><a class="btn btn-outline" href="{% url 'admin_hero_slides' %}">Cancel</a></div>
 </form>{% endblock %}
+
+
+
