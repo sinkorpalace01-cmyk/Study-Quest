@@ -7,7 +7,13 @@
     },
     "prototype": {
       "root": "prototype",
-      "outputDirectory": "."
+      "framework": "node",
+      "entrypoint": "server.mjs",
+      "functions": {
+        "server.mjs": {
+          "includeFiles": "**/*"
+        }
+      }
     }
   },
   "rewrites": [

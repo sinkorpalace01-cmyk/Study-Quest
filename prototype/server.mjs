@@ -21,4 +21,9 @@ const server = http.createServer(async (req, res) => {
   }
 });
 const port = Number(process.env.PORT || 4173);
-server.listen(port, '127.0.0.1', () => console.log(`StudyQuest is ready at http://localhost:${port}`));
+
+if (!process.env.VERCEL) {
+  server.listen(port, '127.0.0.1', () => console.log(`StudyQuest is ready at http://localhost:${port}`));
+}
+
+export default server;
