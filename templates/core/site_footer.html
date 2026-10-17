@@ -1,0 +1,9 @@
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-identity"><a class="site-footer-brand" href="{% url 'landing' %}"><span class="brand-mark">{% if site.logo_url %}<img src="{{ site.logo_url }}" alt="">{% else %}✦{% endif %}</span><span>{{ site.name }}</span></a><p>{{ site.footer_text|default:site.tagline }}</p><span class="footer-spark">✦ Learn with purpose. Grow with every quest.</span></div>
+    <nav class="footer-column" aria-label="Explore"><strong>Explore</strong><a href="{% url 'landing' %}#how">How it works</a><a href="{% url 'landing' %}#features">Features</a><a href="{% url 'landing' %}#faq">Frequently asked questions</a></nav>
+    <nav class="footer-column" aria-label="Your journey"><strong>Your journey</strong>{% if request.user.is_authenticated %}<a href="{% url 'dashboard' %}">Dashboard</a><a href="{% url 'quest_list' %}">My quests</a><a href="{% url 'certificate_list' %}">Certificates</a>{% else %}<a href="{% url 'signup' %}">Get started</a><a href="{% url 'login' %}">Log in</a><a href="{% url 'contact' %}">Contact us</a>{% endif %}</nav>
+    <div class="footer-column footer-contact"><strong>Stay connected</strong>{% if site.contact_email %}<a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>{% endif %}{% if site.contact_phone %}<a href="tel:{{ site.contact_phone }}">{{ site.contact_phone }}</a>{% endif %}{% if site.contact_address %}<span>{{ site.contact_address }}</span>{% endif %}{% if site.support_url %}<a href="{{ site.support_url }}" target="_blank" rel="noopener">Support ↗</a>{% endif %}</div>
+    <div class="footer-bottom"><small>© {% now "Y" %} {{ site.name }}. All rights reserved.</small><small>Made for curious minds <span aria-hidden="true">✦</span></small></div>
+  </div>
+</footer>

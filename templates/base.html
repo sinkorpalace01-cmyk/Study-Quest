@@ -1,0 +1,134 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ site.accent_color|default:'#7258e8' }}">
+  <title>{% block title %}{{ site.name }}{% endblock %}</title>
+  {% if site.logo_url %}<link rel="icon" href="{{ site.logo_url }}">{% else %}<link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">{% endif %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'css/django.css' %}">
+  <link rel="stylesheet" href="{% static 'css/hero.css' %}">
+  <link rel="stylesheet" href="{% static 'css/toasts.css' %}">
+  <link rel="stylesheet" href="{% static 'css/workspace.css' %}">
+  <link rel="stylesheet" href="{% static 'css/visual-refresh.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="quest-loader" id="quest-loader" role="status" aria-live="polite" aria-label="Loading {{ site.name }}" style="--loader-accent:{{ site.accent_color|default:'#7258e8' }}">
+  <div class="quest-loader-card">
+    <div class="quest-loader-scene" aria-hidden="true">
+      <span class="loader-orbit loader-orbit-outer"></span><span class="loader-orbit loader-orbit-inner"></span>
+      <span class="loader-spark loader-spark-one">✦</span><span class="loader-spark loader-spark-two">✧</span><span class="loader-spark loader-spark-three">✦</span>
+      <span class="loader-xp">+25 XP</span><span class="loader-level">LEVEL UP!</span>
+      <span class="quest-loader-emblem">{% if site.logo_url %}<img src="{{ site.logo_url }}" alt="">{% else %}✦{% endif %}</span>
+    </div>
+    <span class="loader-eyebrow">YOUR ADVENTURE IS LOADING</span>
+    <strong>{{ site.name }}</strong>
+    <p data-loader-message>Gathering your next learning moment…</p>
+    <div class="quest-loader-track" aria-hidden="true"><i></i></div>
+    <div class="loader-milestones" aria-hidden="true"><span>✦ Discover</span><span>◇ Explore</span><span>✺ Achieve</span></div>
+  </div>
+</div>
+<div class="feedback-stack" id="feedback-stack" aria-label="Notifications" aria-live="polite">
+  {% for message in messages %}
+  <div class="feedback-toast {{ message.level_tag }}" data-feedback-toast role="{% if message.level_tag == 'error' %}alert{% else %}status{% endif %}">
+    <span class="feedback-icon" aria-hidden="true">{% if message.level_tag == 'success' %}✓{% elif message.level_tag == 'error' %}!{% elif message.level_tag == 'warning' %}!{% else %}i{% endif %}</span>
+    <div class="feedback-copy"><strong>{% if message.level_tag == 'success' %}Success{% elif message.level_tag == 'error' %}Something went wrong{% elif message.level_tag == 'warning' %}Please note{% else %}Update{% endif %}</strong><span>{{ message }}</span></div>
+    <button class="feedback-close" type="button" aria-label="Dismiss notification" data-feedback-close>×</button>
+    <span class="feedback-progress" aria-hidden="true"></span>
+  </div>
+  {% endfor %}
+</div>
+{% if request.user.is_authenticated and request.resolver_match.url_name != 'landing' and request.resolver_match.url_name != 'contact' and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'signup' and request.resolver_match.url_name != 'invite_accept' and request.resolver_match.url_name != 'password_reset' and request.resolver_match.url_name != 'password_reset_done' and request.resolver_match.url_name != 'password_reset_confirm' and request.resolver_match.url_name != 'password_reset_complete' and request.resolver_match.url_name != 'certificate_verify' %}
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+      <div class="sidebar-head"><a class="brand" href="{% url 'dashboard' %}">
+        <span class="brand-mark">{% if site.logo_url %}<img src="{{ site.logo_url }}" alt="">{% else %}✦{% endif %}</span><span>{{ site.name }}</span>
+      </a><button class="sidebar-close" id="sidebar-close" type="button" aria-label="Close navigation">×</button></div>
+      <div class="sidebar-scroll">
+      <div class="nav-label">WORKSPACE</div>
+      <a class="nav-item" href="{% url 'dashboard' %}"><span class="nav-icon">◫</span> Dashboard</a>
+      <a class="nav-item" href="{% url 'quest_list' %}"><span class="nav-icon">◇</span> My quests</a>
+      <a class="nav-item" href="{% url 'quest_new' %}"><span class="nav-icon">＋</span> Create quest</a>
+      <a class="nav-item" href="{% url 'certificate_list' %}"><span class="nav-icon">✺</span> Certificates</a>
+      <a class="nav-item" href="{% url 'leaderboard' %}"><span class="nav-icon">♛</span> Leaderboard</a>
+      <div class="nav-label">ACCOUNT</div>
+      <a class="nav-item" href="{% url 'notification_list' %}"><span class="nav-icon">♧</span> Notifications {% if unread_count %}<span class="nav-badge">{{ unread_count }}</span>{% endif %}</a>
+      <a class="nav-item" href="{% url 'profile' %}"><span class="nav-icon">◉</span> Profile</a>
+      <a class="nav-item" href="{% url 'invite' %}"><span class="nav-icon">↗</span> Invite a learner</a>
+      {% if request.user.is_staff %}
+        <div class="nav-label">MANAGE</div>
+        <a class="nav-item" href="{% url 'admin_home' %}"><span class="nav-icon">▦</span> Admin overview</a>
+        <a class="nav-item" href="{% url 'admin_hero_slides' %}"><span class="nav-icon">▣</span> Home hero slides</a>
+        <a class="nav-item" href="{% url 'admin_contact_messages' %}"><span class="nav-icon">✉</span> Contact inbox</a>
+        {% if request.user.is_superuser %}
+          <a class="nav-item" href="{% url 'admin_users' %}"><span class="nav-icon">♧</span> Users</a>
+          <a class="nav-item" href="{% url 'admin_integrations' %}"><span class="nav-icon">⌘</span> Integrations</a>
+        {% endif %}
+        <a class="nav-item" href="{% url 'admin_settings' %}"><span class="nav-icon">⚙</span> Site settings</a>
+      {% endif %}
+      </div><div class="sidebar-bottom">
+        <div class="sidebar-promo"><b>Your next breakthrough awaits ✦</b><p>Build knowledge one quest at a time.</p><a class="btn btn-primary" href="{% url 'quest_new' %}">Start a quest</a></div>
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="nav-item plain-button" type="submit">↪ Sign out</button></form>
+      </div>
+    </aside>
+    <button class="sidebar-backdrop" id="sidebar-backdrop" type="button" aria-label="Close navigation"></button>
+    <div class="main">
+      <header class="topbar">
+        <div class="top-left">
+          <button class="icon-btn menu-btn" id="sidebar-toggle" type="button" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false">☰</button>
+          <a class="top-brand" href="{% url 'dashboard' %}"><span class="brand-mark">{% if site.logo_url %}<img src="{{ site.logo_url }}" alt="">{% else %}✦{% endif %}</span><span>{{ site.name }}</span></a>
+          <span class="crumb">/ <strong>{% block crumb %}Workspace{% endblock %}</strong></span>
+        </div>
+        <div class="top-actions">
+          <a class="icon-btn" href="{% url 'notification_list' %}" aria-label="Notifications">♧{% if unread_count %}<i class="notify-dot"></i>{% endif %}</a>
+          <a class="user-mini" href="{% url 'profile' %}"><span class="avatar">{% if request.user.avatar_url %}<img src="{{ request.user.avatar_url }}" alt="">{% else %}{{ request.user.username|first|upper }}{% endif %}</span><span class="user-mini-text"><b>{{ request.user.get_full_name|default:request.user.username }}</b><span>{% if request.user.is_superuser %}Platform owner{% elif request.user.is_staff %}Administrator{% else %}Level {{ request.user.level }} learner{% endif %}</span></span></a>
+        </div>
+      </header>
+      <main class="page">
+        {% block content %}{% endblock %}
+      </main>
+      {% include 'core/site_footer.html' %}
+    </div>
+    <nav class="mobile-nav" aria-label="Quick navigation">
+      <a href="{% url 'dashboard' %}"><span>⌂</span>Home</a>
+      <a href="{% url 'quest_list' %}"><span>◇</span>Quests</a>
+      <a href="{% url 'quest_new' %}"><span>＋</span>Create</a>
+      <a href="{% url 'certificate_list' %}"><span>✺</span>Awards</a>
+      <a href="{% url 'profile' %}"><span>◉</span>Profile</a>
+    </nav>
+  </div>
+{% else %}
+  <div class="public-shell">
+    <header class="site-header public-header">
+      <a class="site-brand" href="{% url 'landing' %}"><span class="brand-mark">{% if site.logo_url %}<img src="{{ site.logo_url }}" alt="">{% else %}✦{% endif %}</span><span>{{ site.name }}</span></a>
+      <nav class="public-links" aria-label="Site navigation">
+        <a href="{% url 'landing' %}#how">How it works</a><a href="{% url 'landing' %}#features">Features</a><a href="{% url 'landing' %}#faq">FAQ</a><a href="{% url 'contact' %}">Contact</a>
+      </nav>
+      <div class="public-actions">
+        {% if request.user.is_authenticated %}<a class="btn btn-primary" href="{% url 'dashboard' %}">Go to dashboard</a>
+        {% else %}<a class="btn btn-outline public-login" href="{% url 'login' %}">Log in</a><a class="btn btn-primary public-signup" href="{% url 'signup' %}">Get started</a>{% endif %}
+      </div>
+      <details class="public-menu">
+        <summary class="btn btn-outline" aria-label="Open site menu">Menu <span aria-hidden="true">☰</span></summary>
+        <nav class="public-menu-panel" aria-label="Mobile site navigation">
+          <a href="{% url 'landing' %}#how">How it works</a><a href="{% url 'landing' %}#features">Features</a><a href="{% url 'landing' %}#faq">FAQ</a><a href="{% url 'contact' %}">Contact us</a>
+          {% if request.user.is_authenticated %}<a href="{% url 'dashboard' %}">Dashboard</a><a href="{% url 'profile' %}">Profile</a>{% else %}<a href="{% url 'login' %}">Log in</a><a href="{% url 'signup' %}">Create account</a>{% endif %}
+          {% if site.contact_email %}<a href="mailto:{{ site.contact_email }}">Contact support</a>{% endif %}
+        </nav>
+      </details>
+    </header>
+    <main class="public-content">
+      {% block public %}{% endblock %}
+    </main>
+    {% include 'core/site_footer.html' %}
+  </div>
+{% endif %}
+<script src="{% static 'js/shell.js' %}" defer></script>
+<script src="{% static 'js/toasts.js' %}" defer></script>
+<script src="{% static 'js/loader.js' %}" defer></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

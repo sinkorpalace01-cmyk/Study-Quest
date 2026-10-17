@@ -1,0 +1,10 @@
+{% load static %}
+<section class="showcase certificate-section"><div class="showcase-inner">
+  <div class="certificate-showcase-frame" aria-label="Preview of a {{ site.name }} achievement certificate"><div class="showcase-certificate">
+    <div class="showcase-certificate-banner"><div class="showcase-certificate-brand"><span class="brand-mark">{% if site.logo_url %}<img src="{{ site.logo_url }}" alt="">{% else %}✦{% endif %}</span><b>{{ site.name }}</b></div><small>A CELEBRATION OF LEARNING</small><h3>Certificate of Achievement</h3></div>
+    <span class="showcase-cert-label">PROUDLY PRESENTED TO</span><span class="showcase-cert-avatar">A</span><strong class="showcase-cert-name">Alex Morgan</strong><p>for successfully completing the learning quest</p><b class="showcase-cert-quest">Mastering the Solar System</b><span class="showcase-cert-level">Beginner level</span><div class="showcase-cert-score">92% average score <span>·</span> Issued today</div>
+    <div class="showcase-cert-bottom"><span><b>VERIFIED ACHIEVEMENT</b><small>Certificate ID · Your unique code<br>Verify online with a secure QR code</small></span><span class="showcase-cert-qr"><img src="{% static 'images/certificate-preview-qr.png' %}" alt="Sample certificate preview QR code"></span></div><span class="showcase-preview-tag">Certificate template preview</span>
+  </div></div>
+  <div class="certificate-section-copy"><span class="eyebrow">SHOW WHAT YOU KNOW</span><h2>A certificate worth sharing.</h2><p>Complete every level to earn your own certificate with your name, profile photo, quest difficulty, score, issue date, and a QR code for verification.</p><a class="btn btn-primary" href="{% url 'signup' %}">Earn your first certificate ↗</a></div>
+</div></section>
+<section class="landing-section"><div class="section-heading"><span class="eyebrow">FOR EVERY CURIOUS MIND</span><h2>Make learning your own.</h2></div><div class="audience-grid"><div class="card"><i>🎓</i><h3>Students</h3></div><div class="card"><i>🚀</i><h3>Self-learners</h3></div><div class="card"><i>📚</i><h3>Teachers</h3></div><div class="card"><i>💻</i><h3>Bootcamps</h3></div></div></section>

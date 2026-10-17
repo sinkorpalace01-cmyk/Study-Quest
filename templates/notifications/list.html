@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Notifications · {{ site.name }}{% endblock %}
+{% block crumb %}Notifications{% endblock %}
+{% block content %}
+<div class="page-title-row"><div><span class="eyebrow">STAY IN THE LOOP</span><h1>Notifications</h1><p>Your learning moments, invitations, and achievements in one place.</p></div><div class="notification-summary"><span><b>{{ unread_count_page }}</b> unread</span><span><b>{{ total_count }}</b> total</span></div></div>
+<div class="notification-toolbar">
+  <nav class="filter-tabs" aria-label="Filter notifications"><a class="{% if status == 'all' %}active{% endif %}" href="?status=all">All</a><a class="{% if status == 'unread' %}active{% endif %}" href="?status=unread">Unread</a><a class="{% if status == 'read' %}active{% endif %}" href="?status=read">Read</a></nav>
+  <div class="notification-toolbar-actions">
+    {% if unread_count_page %}<form method="post" action="{% url 'notification_read' %}">{% csrf_token %}<button class="btn btn-outline" type="submit">Mark all read</button></form>{% endif %}
+    {% if total_count %}<form method="post" action="{% url 'notification_clear_all' %}" onsubmit="return confirm('Clear all notifications?')">{% csrf_token %}<button class="btn btn-danger-soft" type="submit">Clear all</button></form>{% endif %}
+  </div>
+</div>
+{% if notifications %}<form id="clear-selected-form" method="post" action="{% url 'notification_clear_selected' %}">{% csrf_token %}<button class="btn btn-outline" type="submit">Clear selected</button></form>{% endif %}
+<div class="notification-feed">
+  {% for notification in notifications %}
+  <article class="notification-card {% if not notification.is_read %}unread{% endif %}">
+    <input class="notification-select" type="checkbox" name="selected" value="{{ notification.pk }}" form="clear-selected-form" aria-label="Select {{ notification.title }}">
+    <span class="notification-symbol" aria-hidden="true">{% if notification.kind == 'badge' %}🏆{% elif notification.kind == 'certificate' %}✺{% elif notification.kind == 'welcome' %}✦{% else %}♧{% endif %}</span>
+    <form class="notification-open" method="post" action="{% url 'notification_open' notification.pk %}">{% csrf_token %}<button type="submit"><span class="notification-topline"><b>{{ notification.title }}</b>{% if not notification.is_read %}<i class="notification-new">New</i>{% endif %}</span><span class="notification-body">{{ notification.body }}</span><small>{{ notification.created_at|timesince }} ago</small><span class="notification-view">{% if notification.link %}View details ↗{% else %}Mark as read ↗{% endif %}</span></button></form>
+    <form class="notification-remove" method="post" action="{% url 'notification_delete' notification.pk %}">{% csrf_token %}<button type="submit" aria-label="Clear {{ notification.title }}" title="Clear notification">×</button></form>
+  </article>
+  {% empty %}<div class="card empty-state notification-empty"><i>♧</i><h3>{% if status == 'all' %}All caught up{% else %}Nothing here yet{% endif %}</h3><p>{% if status == 'all' %}Your updates will appear here.{% else %}Try another notification filter.{% endif %}</p></div>{% endfor %}
+</div>
+{% endblock %}

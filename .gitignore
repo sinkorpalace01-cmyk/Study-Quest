@@ -1,0 +1,15 @@
+node_modules/
+.venv/
+.python/
+__pycache__/
+*.py[cod]
+db.sqlite3
+media/
+staticfiles/
+.env
+.local-admin.txt
+.env.*
+!.env.example
+dist/
+coverage/
+*.log

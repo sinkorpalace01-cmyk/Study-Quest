@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ site.name }} — Learn beautifully{% endblock %}
+{% block public %}
+<div class="landing">
+  <section class="landing-hero" aria-label="Welcome to {{ site.name }}">
+    <div class="hero-slider" data-hero-slider aria-roledescription="carousel" aria-label="Learning highlights">
+      {% for slide in slides %}
+      <article class="hero-slide" data-hero-slide aria-roledescription="slide" aria-label="{{ forloop.counter }} of {{ slides|length }}" {% if not forloop.first %}hidden{% endif %}>
+        <div class="landing-hero-inner">
+          <div class="hero-copy">
+            {% if slide.eyebrow %}<span class="eyebrow">{{ slide.eyebrow }}</span>{% endif %}
+            <h1>{{ slide.title }}</h1>
+            <p>{{ slide.body }}</p>
+            <div class="landing-actions"><a class="btn btn-white" href="{{ slide.cta_url }}">{{ slide.cta_text }} ↗</a><a class="btn btn-outline light" href="#how">See how it works</a></div>
+          </div>
+          <div class="hero-visual">
+            {% if slide.media_type == 'image' and slide.media_url %}<img class="hero-slide-media" src="{{ slide.media_url }}" alt="{{ slide.title }}" fetchpriority="{% if forloop.first %}high{% else %}auto{% endif %}">
+            {% elif slide.media_type == 'video' and slide.media_url %}<video class="hero-slide-media" muted loop playsinline controls preload="metadata" aria-label="{{ slide.title }}"><source src="{{ slide.media_url }}"></video>
+            {% else %}
+              <div class="hero-art-card hero-art-{{ forloop.counter }}" aria-hidden="true">
+                <div class="hero-art-top"><span class="brand-mark">✦</span><b>{{ site.name }}</b><span class="hero-level">LEVEL 03</span></div>
+                <div class="hero-art-progress"><i></i></div>
+                <div class="hero-art-question">What helps you remember something for longer?</div>
+                <div class="hero-art-answer">Reading it once</div><div class="hero-art-answer selected">Active recall and practice <b>✓</b></div><div class="hero-art-answer">Skipping breaks</div>
+              </div>
+              <span class="hero-float-chip hero-chip-xp">✦ +100 XP earned</span><span class="hero-float-chip hero-chip-badge">🏆 New badge unlocked!</span>
+            {% endif %}
+          </div>
+        </div>
+      </article>
+      {% empty %}
+      <article class="hero-slide"><div class="landing-hero-inner"><div class="hero-copy"><span class="eyebrow">YOUR LEARNING ADVENTURE STARTS HERE</span><h1>Turn curiosity into a superpower.</h1><p>{{ site.tagline }}</p><div class="landing-actions"><a class="btn btn-white" href="{% url 'signup' %}">Start learning free ↗</a><a class="btn btn-outline light" href="#how">See how it works</a></div></div></div></article>
+      {% endfor %}
+      {% if slides|length > 1 %}<div class="hero-controls" aria-label="Choose a highlight"><button type="button" data-hero-prev aria-label="Previous slide">←</button><div class="hero-dots">{% for slide in slides %}<button type="button" data-hero-dot="{{ forloop.counter0 }}" aria-label="Show slide {{ forloop.counter }}" {% if forloop.first %}aria-current="true"{% endif %}></button>{% endfor %}</div><span data-hero-count>01 / {{ slides|length|stringformat:'02d' }}</span><button type="button" data-hero-next aria-label="Next slide">→</button></div>{% endif %}
+    </div>
+  </section>
+  <div class="landing-stats"><div><b>{{ learner_count }}+</b><span>curious learners</span></div><div><b>{{ quest_count }}+</b><span>quests created</span></div><div><b>{{ certificate_count }}+</b><span>achievements earned</span></div></div>
+  <section class="landing-section" id="how"><div class="section-heading"><span class="eyebrow">SIMPLE BY DESIGN</span><h2>Your learning journey, in three steps.</h2><p>From first idea to lasting understanding.</p></div><div class="steps-grid"><div class="card"><span class="step-no">01 / CHOOSE</span><h3>Pick a topic</h3><p>Bring a subject, notes, or a PDF. Choose the pace and difficulty that work for you.</p></div><div class="card"><span class="step-no">02 / EXPLORE</span><h3>Play through levels</h3><p>Answer thoughtfully crafted questions, learn from explanations, and build momentum.</p></div><div class="card"><span class="step-no">03 / ACHIEVE</span><h3>Celebrate progress</h3><p>Earn XP, badges, streaks, and a verified certificate for each completed quest.</p></div></div></section>
+  <section class="showcase"><div class="showcase-inner"><div><span class="eyebrow">LEARNING THAT STICKS</span><h2>Every answer moves you forward.</h2><p>Your dashboard brings your quests, scores, badges, and next steps together. Learning feels less like a chore and more like progress.</p><a class="btn btn-primary" href="{% url 'signup' %}">Create your first quest</a></div><div class="showcase-box"><b>Weekly learning progress</b><p>Keep your streak alive and watch your XP grow.</p><div class="progress"><i style="width:72%"></i></div><div class="showcase-badges"><i>🔥</i><i>🚀</i><i>✨</i><i>🏆</i></div></div></div></section>
+  <section class="landing-section" id="features"><div class="section-heading"><span class="eyebrow">MADE FOR REAL LEARNERS</span><h2>Everything you need to keep going.</h2></div><div class="feature-grid"><div class="card"><span class="feature-icon">✧</span><h3>AI-generated quests</h3><p>Tailored questions and explanations from your topics and source material.</p></div><div class="card"><span class="feature-icon">◇</span><h3>Level by level</h3><p>Build confidence through a clear path with feedback after every attempt.</p></div><div class="card"><span class="feature-icon">✺</span><h3>Shareable certificates</h3><p>Download a PDF with a QR code that anyone can verify.</p></div><div class="card"><span class="feature-icon">♛</span><h3>Friendly competition</h3><p>See how your effort stacks up on the learner leaderboard.</p></div><div class="card"><span class="feature-icon">🔥</span><h3>Streaks and rewards</h3><p>Turn regular study into a habit with XP and badges.</p></div><div class="card"><span class="feature-icon">☁</span><h3>Learn anywhere</h3><p>A comfortable experience from phone to desktop.</p></div></div></section>
+  {% include 'core/landing_extra.html' %}
+  <section class="landing-section" id="faq"><div class="section-heading"><span class="eyebrow">GOOD TO KNOW</span><h2>Questions, answered.</h2></div><div class="faq"><details><summary>Can I use my own notes?</summary><p>Yes. Paste text, upload a PDF or text document, or add a source URL for reference.</p></details><details><summary>How do certificates work?</summary><p>Finish every level in a quest to earn a downloadable PDF certificate with a verification code.</p></details><details><summary>Can I learn on my phone?</summary><p>Yes. StudyQuest is designed for small screens and touch navigation.</p></details></div></section>
+  <section class="landing-cta"><h2>Ready to learn something wonderful?</h2><p>Your first quest is only a few clicks away.</p><a class="btn btn-white" href="{% url 'signup' %}">Get started free ↗</a></section>
+</div>
+{% endblock %}
+{% block extra_scripts %}<script src="{% static 'js/home-hero.js' %}" defer></script>{% endblock %}

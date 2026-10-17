@@ -1,0 +1,7 @@
+{% extends 'emails/base.html' %}{% block content %}
+<p style="margin:0 0 10px;color:#7258e8;font-size:11px;font-weight:bold;letter-spacing:1px">WELCOME ABOARD</p>
+<h1 style="margin:0 0 14px;font-size:27px;line-height:1.2;letter-spacing:-.7px;color:#25233d">Your next learning win starts here.</h1>
+<p style="margin:0 0 23px;color:#68667a;font-size:15px;line-height:1.7">Hi {{ user.first_name|default:user.username }}, welcome to {{ site.name }}. Turn a topic you care about into a focused quest, learn at your own pace, and celebrate every step forward.</p>
+<table role="presentation" cellspacing="0" cellpadding="0"><tr><td bgcolor="#7258e8" style="border-radius:10px"><a href="{{ site_url }}{% url 'quest_new' %}" style="display:inline-block;padding:13px 20px;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none">Create your first quest&nbsp; →</a></td></tr></table>
+<p style="margin:23px 0 0;color:#858296;font-size:12px;line-height:1.6">Your dashboard is ready whenever you are.</p>
+{% endblock %}

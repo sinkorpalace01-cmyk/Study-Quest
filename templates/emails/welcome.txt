@@ -1,0 +1,8 @@
+Welcome to {{ site.name }}, {{ user.first_name|default:user.username }}!
+
+Turn a topic you care about into a focused quest, learn at your own pace, and celebrate every step forward.
+
+Create your first quest: {{ site_url }}{% url 'quest_new' %}
+
+{{ site.tagline }}
+{% if site.contact_email %}Questions? {{ site.contact_email }}{% endif %}

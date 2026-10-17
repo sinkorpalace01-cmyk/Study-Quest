@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Contact us · {{ site.name }}{% endblock %}
+{% block public %}
+<main class="contact-shell">
+  <section class="contact-intro"><img class="auth-art-image" src="{{ site.auth_image_url|default:'/static/images/learning-auth.png' }}" alt="">
+    <span class="eyebrow">WE’RE HERE TO HELP</span>
+    <h1>Let’s make your learning journey better.</h1>
+    <p>Questions, feedback, or an idea for {{ site.name }}? Send us a note and our team will get back to you.</p>
+    <div class="contact-details">
+      {% if site.contact_email %}<a href="mailto:{{ site.contact_email }}"><span>✉</span><div><small>EMAIL US</small><b>{{ site.contact_email }}</b></div></a>{% endif %}
+      {% if site.contact_phone %}<a href="tel:{{ site.contact_phone }}"><span>☎</span><div><small>CALL US</small><b>{{ site.contact_phone }}</b></div></a>{% endif %}
+      {% if site.contact_address %}<div><span>⌖</span><div><small>FIND US</small><b>{{ site.contact_address }}</b></div></div>{% endif %}
+    </div>
+    <div class="contact-promise"><span>✦</span><p><b>A real person reads every message.</b><br>We’ll reply as soon as we can.</p></div>
+  </section>
+  <section class="contact-form-panel"><div class="contact-form-heading"><span class="eyebrow">CONTACT THE TEAM</span><h2>Send us a message</h2><p>Fill in the form and we’ll reply to your email.</p></div>
+    <form method="post" class="contact-form" novalidate>{% csrf_token %}{{ form.website }}
+      {% for field in form %}{% if not field.is_hidden %}<div class="field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<small class="form-error">{{ error }}</small>{% endfor %}</div>{% endif %}{% endfor %}
+      <button class="btn btn-primary btn-block" type="submit">Send message <span aria-hidden="true">↗</span></button>
+    </form>
+  </section>
+</main>
+{% endblock %}
+

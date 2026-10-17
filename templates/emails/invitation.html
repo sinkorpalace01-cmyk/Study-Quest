@@ -1,0 +1,7 @@
+{% extends 'emails/base.html' %}{% block content %}
+<p style="margin:0 0 10px;color:#7258e8;font-size:11px;font-weight:bold;letter-spacing:1px">YOU’RE INVITED</p>
+<h1 style="margin:0 0 14px;font-size:27px;line-height:1.2;letter-spacing:-.7px;color:#25233d">Come learn with us.</h1>
+<p style="margin:0 0 23px;color:#68667a;font-size:15px;line-height:1.7">{{ inviter_name }} invited you to join {{ site.name }}. Create your account to explore learning quests, build your skills, and track your progress.</p>
+<table role="presentation" cellspacing="0" cellpadding="0"><tr><td bgcolor="#7258e8" style="border-radius:10px"><a href="{{ invite_url }}" style="display:inline-block;padding:13px 20px;color:#ffffff;font-size:14px;font-weight:bold;text-decoration:none">Accept your invitation&nbsp; →</a></td></tr></table>
+<p style="margin:20px 0 7px;color:#858296;font-size:12px">This invitation expires in 7 days.</p><p style="margin:0;color:#858296;font-size:12px;line-height:1.6">If the button doesn’t work, copy this link into your browser:<br><a href="{{ invite_url }}" style="color:#654bd2;overflow-wrap:anywhere">{{ invite_url }}</a></p>
+{% endblock %}

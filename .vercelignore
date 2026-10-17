@@ -1,0 +1,12 @@
+.env
+.env.*
+!.env.example
+.local-admin.txt
+.venv/
+.python/
+db.sqlite3
+media/
+staticfiles/
+prototype/
+__pycache__/
+*.pyc

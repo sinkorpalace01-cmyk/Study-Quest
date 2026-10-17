@@ -1,0 +1,7 @@
+Congratulations, {{ learner_name }}!
+
+You completed {{ quest_title }} with an average score of {{ score }}% and earned a certificate. Your certificate is attached.
+{% if certificate_url %}View your certificate: {{ certificate_url }}{% endif %}
+
+Keep building your knowledge, one quest at a time.
+{{ site.name }} · {{ site.tagline }}

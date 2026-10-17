@@ -1,0 +1,8 @@
+New message sent through {{ site.name }}
+
+Subject: {{ subject }}
+From: {{ sender_name }} <{{ sender_email }}>
+
+{{ message }}
+
+Reply to this email to respond to {{ sender_name }}.
