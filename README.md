@@ -37,7 +37,7 @@ git commit -m "Prepare StudyQuest for deployment"
 git push origin main
 ```
 
-Import the GitHub repository into Vercel and leave the project root at the repository root. Vercel detects Django from `manage.py`, reads `config.settings.WSGI_APPLICATION`, and runs `collectstatic` for the configured `STATIC_ROOT`; no custom build command or routing file is needed. `.python-version` selects Python 3.12. Static files are served through Vercel's CDN. User uploads must stay on Cloudinary because Vercel's function filesystem is temporary.
+Import the GitHub repository into Vercel and leave the project root at the repository root. This repository uses Vercel Services: set the project framework to **Services** so `vercel.json` routes public requests to the Django `app` service. The legacy browser-only `prototype` is configured as an internal static service and receives no public traffic. Django reads `config.settings.WSGI_APPLICATION` and runs `collectstatic` for the configured `STATIC_ROOT`; `.python-version` selects Python 3.12. Static files are served through Vercel's CDN. User uploads must stay on Cloudinary because Vercel's function filesystem is temporary.
 
 In Vercel Project Settings → Environment Variables, set these for Production and, if you want preview deployments, set a separate Preview database and secrets:
 
