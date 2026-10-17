@@ -10,6 +10,7 @@ staticfiles/
 .local-admin.txt
 .env.*
 !.env.example
+.vercel/
 dist/
 coverage/
 *.log
