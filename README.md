@@ -1,69 +1,142 @@
-# StudyQuest (Django)
+<div align="center">
 
-StudyQuest is a mobile-friendly learning app that turns a topic or uploaded notes into an AI-generated, multi-level quiz. Learners earn XP and badges, build streaks, invite classmates, and receive verifiable PDF certificates with built-in sharing.
+# ✦ StudyQuest
+
+### Turn curiosity into a superpower.
+
+Create a learning quest from a topic or your own notes, master it one level at a time, and celebrate your progress with shareable certificates.
+
+[**Open the live app →**](https://study-quest-hy-b00d.vercel.app/) · [Source code](https://github.com/sinkorpalace01-cmyk/Study-Quest)
+
+![StudyQuest preview](studyquest-preview.png)
+
+**Built with Django · Powered by Gemma 4 · Designed for every screen**
+
+</div>
+
+---
+
+## The idea
+
+Studying can feel like a long list of material to get through. StudyQuest turns it into a journey: choose what you want to learn, get a structured set of levels and questions, then build momentum as you progress. Learners can bring their own notes, track achievements, and share proof of what they have mastered.
+
+## What you can do
+
+- **Build a learning quest with AI.** Enter a subject, add context, or use source material to generate a multi-level question path. Choose a difficulty and quest length.
+- **Learn actively.** Answer multiple-choice questions, see explanations, retry levels, and ask AI to clarify an answer.
+- **Make progress visible.** Earn XP, maintain streaks, unlock badges, and compare progress on the leaderboard.
+- **Share verified achievements.** Download a polished PDF certificate with the learner's photo, quest level, score, app branding, and a QR verification link. Share it through a link, WhatsApp, LinkedIn, or your device's share sheet.
+- **Stay connected.** Manage a profile, receive notifications, and invite other learners.
+- **Run the platform.** The owner dashboard manages users and roles, site identity, hero slides, integrations, and contact messages.
+- **Use it on mobile or desktop.** Responsive pages, fixed navigation, visible feedback, and a branded animated loader keep the experience clear across screen sizes.
+
+Images and other media can be uploaded from a device or added by URL where supported. The home hero supports multiple image, video, and text slides managed by an administrator.
+
+## AI, thoughtfully applied
+
+StudyQuest sends quest-generation and answer-explanation prompts to **Gemma 4** through the Gemini API. If Gemma is unavailable, quest generation can fall back to **GPT-OSS-20B through Groq**. Generated quest data is checked for the expected levels and answer structure before it is saved.
+
+Provider keys stay on the server. They are configured as environment variables and can be managed through the owner-only integrations area. AI-generated material should be reviewed as part of learning, not treated as a substitute for trusted course material.
+
+## Technology
+
+| Area | Tools |
+| --- | --- |
+| Web application | Python, Django 5.2, Django templates, HTML, CSS, JavaScript |
+| Data | TiDB Cloud (MySQL-compatible), with SQLite for local development |
+| AI | Gemma 4 via Gemini API; GPT-OSS-20B via Groq fallback |
+| Media | Cloudinary for uploaded images and files |
+| Certificates | ReportLab PDF generation and QR-code verification |
+| Deployment | Vercel Services |
 
 ## Run locally
 
+You need Python 3.12 and pip. The project uses SQLite automatically for local development when TiDB credentials are not set and `DEBUG=1`.
+
 ```powershell
-uv venv .venv --python 3.12
-uv pip install --python .venv\Scripts\python.exe -r requirements.txt
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
 Copy-Item .env.example .env
-# Fill in .env with your own credentials.
-.\.venv\Scripts\python.exe manage.py migrate
-.\.venv\Scripts\python.exe manage.py createsuperuser
-.\.venv\Scripts\python.exe manage.py runserver
 ```
 
-Open http://localhost:8000/. The local `.env` is configured for the requested `hacktoberfeast` TiDB database and ignored by Git. StudyQuest tables use a `studyquest_` prefix in Django's app labels so they can coexist with the pre-existing project tables in that database. Migrations have been applied with TLS certificate and host identity verification enabled.
-
-Use `/admin/` for the custom management area. The first platform owner login is stored in ignored `.local-admin.txt`. Any signed-in learner can invite another learner; only the platform owner can invite administrators, change account roles, and delete another user's account. Owners can update user email, password, profile, XP, streak and access, plus the app name, logo, contact details, registration setting and service credentials. Service credential overrides are encrypted in TiDB using `DJANGO_SECRET_KEY`; keep this key stable or re-enter overrides after rotating it. User and site images, and quest sources and cover art, accept a device upload or a URL. Uploads go to Cloudinary.
-
-The home page starts with three image slides stored in `static/images/`. Staff can edit or replace them at `/admin/hero/` with text, a device image/video upload, or a direct media URL. Hero copy is length-limited so its full message and controls fit the first screen on common phone and desktop sizes. The public `/contact/` form saves messages to TiDB, emails the configured site contact, and lets staff track replies in `/admin/contact/`. Welcome, invitation, password reset, contact, and certificate mail use the current site name, logo and contact details in HTML and plain-text versions.
-
-Quest generation first tries Google's Gemma 4 model through the Gemini API, then Groq using `openai/gpt-oss-20b`, the current supported replacement model for the retired Llama models. Groq offers this model on the free-plan limits. Provider keys, TiDB, Cloudinary and Gmail SMTP settings are read on the server from `.env`; API, media and email credentials can also be rotated in `/admin/integrations/`. A prior Groq request with the provided key returned HTTP 401, which indicates an authorization issue independent of the model; Gemma generation worked. If both AI services are unavailable, the quest form reports the error; it does not invent questions. PDF certificates are generated with ReportLab, include a verification QR code, can be downloaded, and are emailed to the learner. Learners can share achievements through the device share sheet, WhatsApp, LinkedIn, or a verification link. Set `SITE_URL` to your deployed origin for correct certificate verification links.
-
-## Prepare for GitHub and Vercel
-
-The Git repository root is this `App/` directory. It already has the GitHub `origin` remote and a `main` branch. `.env`, `.env.*` (except the safe `.env.example` template), `.local-admin.txt`, `.vercel/`, the SQLite database, uploaded media, and generated `staticfiles/` are ignored. Never add live credentials to source files or commit `.env`.
-
-Review and push your changes from PowerShell:
+Set a local `DJANGO_SECRET_KEY` in `.env` (a development-only value is fine) and keep `DEBUG=1`. Then run:
 
 ```powershell
-git status --short
-git add -A
-git diff --cached --check
-git status --short
-git commit -m "Prepare StudyQuest for deployment"
-git push origin main
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
 ```
 
-Import the GitHub repository into Vercel and leave the project root at the repository root. This repository uses Vercel Services: set the project framework to **Services** so `vercel.json` routes public requests to the Django `app` service. The legacy browser-only `prototype` is configured as an internal Node service and receives no public traffic. Django reads `config.settings.WSGI_APPLICATION` and runs `collectstatic` for the configured `STATIC_ROOT`; `.python-version` selects Python 3.12. Static files are served through Vercel's CDN. User uploads must stay on Cloudinary because Vercel's function filesystem is temporary.
+Visit [http://localhost:8000](http://localhost:8000). Run the test suite with:
 
-In Vercel Project Settings → Environment Variables, set these for Production and, if you want preview deployments, set a separate Preview database and secrets:
+```powershell
+python manage.py test
+```
 
-| Variable | Value |
+AI generation, email, and media upload need their corresponding provider credentials. The rest of the app can be explored locally without configuring those integrations.
+
+## Configure integrations
+
+Copy `.env.example` and fill in only the services you use. Never commit `.env` or paste secrets into client-side code.
+
+| Variable | Purpose |
 | --- | --- |
-| `DJANGO_SECRET_KEY` | A newly generated, long random value used only for deployment. Keep it stable because encrypted service credentials depend on it. |
-| `DEBUG` | `0` |
-| `SITE_URL` | The final public HTTPS origin, such as `https://your-project.vercel.app`; use the custom domain if you add one. |
-| `ALLOWED_HOSTS` | `.vercel.app,your-domain.example` (omit the example domain if unused). |
-| `CSRF_TRUSTED_ORIGINS` | `https://*.vercel.app,https://your-domain.example` (omit the example domain if unused). |
-| `TIDB_HOST`, `TIDB_PORT`, `TIDB_USER`, `TIDB_PASSWORD`, `TIDB_DATABASE` | Your TiDB Cloud connection values. The app verifies TLS using the installed CA bundle. |
-| `GEMINI_API_KEY`, `GROQ_API_KEY` | Your server-side AI provider keys. The model variables are optional and use the defaults in `.env.example`. |
-| `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Your Cloudinary upload credentials. |
-| `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` | The sending mailbox and its SMTP app password. |
+| `DJANGO_SECRET_KEY` | Django signing and encryption key; keep it stable in production. |
+| `DEBUG` | Use `1` only for local development; set `0` in production. |
+| `SITE_URL` | Canonical public site origin used in email and certificate links. |
+| `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS` | Host and HTTPS origins accepted by Django. |
+| `TIDB_HOST`, `TIDB_PORT`, `TIDB_USER`, `TIDB_PASSWORD`, `TIDB_DATABASE` | TiDB Cloud connection. TLS identity and certificate checks are enabled. |
+| `GEMINI_API_KEY`, `GEMMA_MODEL` | Primary Gemma 4 integration. |
+| `GROQ_API_KEY`, `GROQ_MODEL` | Optional quest-generation fallback. |
+| `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Persistent media uploads. |
+| `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` | Gmail SMTP delivery for invitations, resets, and notifications. |
 
-Keep these variables out of GitHub. Use a fresh Django secret key in Vercel rather than copying the local key. If you enable Preview deployments, a separate TiDB database avoids preview signups and test data mixing with production.
+## Deploy on Vercel
 
-Before the first live deployment, connect the Vercel CLI to the project, configure its Production variables, then apply database migrations from your trusted local checkout:
+The project includes a root `vercel.json` with two services: the Django app handles all public paths, and the older browser-only prototype remains internal. In Vercel, import the repository with the project root set to the repository root and select **Services** as the framework. Set the required production environment variables in Vercel's project settings, use a fresh production `DJANGO_SECRET_KEY`, and configure the production database and Cloudinary storage before inviting real users. The public app URL is [study-quest-hy-b00d.vercel.app](https://study-quest-hy-b00d.vercel.app/).
+
+Apply database migrations against the configured production environment before the first live release:
 
 ```powershell
 vercel link
-vercel env run -e production -- .\.venv\Scripts\python.exe manage.py migrate
+vercel env run -e production -- python manage.py migrate
 ```
 
-Then push `main` to trigger a deployment, or import the repository in Vercel and deploy from its dashboard. Check the generated deployment URL, then update `SITE_URL`, `ALLOWED_HOSTS`, and `CSRF_TRUSTED_ORIGINS` for your chosen hostname and redeploy if you changed them. Configure Vercel's Production branch as `main` to deploy future pushes automatically.
+Vercel's function filesystem is temporary, so user uploads belong in Cloudinary. Set `SITE_URL`, `ALLOWED_HOSTS`, and `CSRF_TRUSTED_ORIGINS` to match the deployed hostname. Make sure the production domain is publicly accessible in Vercel's Deployment Protection settings before sharing the demo link.
 
-Vercel documents Django detection and static collection in its [Django deployment guide](https://vercel.com/docs/frameworks/full-stack/django). The Python runtime is currently marked Beta in Vercel's [Python runtime documentation](https://vercel.com/docs/functions/runtimes/python). The Hobby plan is limited to personal, non-commercial use; check Vercel's current [Hobby plan terms](https://vercel.com/docs/plans/hobby) if this platform will be used commercially.
+## Project layout
 
-The old browser-only prototype is retained under `prototype/` for reference; it is not the Django application.
+```text
+accounts/       Email-based accounts, profiles, invitations, and access control
+certificates/   PDF certificates, sharing, and public verification
+config/         Django settings, URLs, and WSGI entry point
+core/           Site identity, landing page, integrations, and contact inbox
+notifications/  Learner notifications
+quests/         Quest creation, levels, attempts, and AI explanations
+static/         Styles, scripts, icons, and bundled images
+templates/      Shared layouts and page templates
+prototype/      Legacy browser-only demonstration
+```
+
+## License
+
+StudyQuest is released under the [MIT License](LICENSE), an OSI-approved open-source license. It permits reuse, modification, and distribution subject to preserving the copyright and license notice. The copyright line credits the project contributors; confirm the project team agrees to this release before publishing the license.
+
+## Security and deployment notes
+
+- Keep `.env`, local databases, uploaded media, and `.local-admin.txt` out of version control; they are ignored by Git.
+- Use a dedicated TiDB database for production and a separate database for preview deployments.
+- Do not use Vercel's temporary filesystem for user uploads or persistent application data.
+- Vercel's Hobby plan is intended for personal, non-commercial use. Review its current terms if the platform will be used commercially.
+
+---
+
+<div align="center">
+
+**StudyQuest — Learn with purpose. Grow with every quest.**
+
+[Live app](https://study-quest-hy-b00d.vercel.app/) · [GitHub](https://github.com/sinkorpalace01-cmyk/Study-Quest)
+
+</div>
