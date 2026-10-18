@@ -142,6 +142,21 @@ body.sidebar-collapsed .topbar { left: 0; }
   body:not(.sidebar-collapsed) .top-brand { display: flex; }
   body.navigation-open .top-brand { display: none; }
   .sidebar-head { min-height: 66px; }
+  /* Keep the drawer's account action above the fixed quick-navigation bar. */
+  body.navigation-open .mobile-nav { display: none; }
+  body.navigation-open .sidebar-promo { display: none; }
+  .sidebar-bottom { padding: 8px 14px calc(10px + env(safe-area-inset-bottom)); }
+  .sidebar-bottom form { margin: 0; }
+  .sidebar-bottom form .plain-button {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: 11px;
+    color: #5140ae;
+    font-weight: 750;
+  }
+  .sidebar-bottom form .plain-button:hover { background: #f3f0ff; }
   .main > .site-footer { padding: 25px 17px 91px; }
   .main .site-footer-inner { grid-template-columns: 1fr; }
   .notification-toolbar { align-items: stretch; }
